@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import {View, Alert, ScrollView} from 'react-native';
+import {View, Alert, ScrollView, TouchableOpacity} from 'react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import {
   Text,
@@ -11,7 +11,6 @@ import {
   Button,
   Icon,
   Title,
-  Footer,
   FooterTab,
   Content,
   Badge,
@@ -20,25 +19,38 @@ import {
   Input,
   Label,
   CheckBox,
+  Radio,
 
 } from 'native-base';
 import {ActivityIndicator} from 'react-native';
-import moment from 'moment'
-//import {withNavigation} from 'react-navigation'
-//import {connect} from 'react-redux'
+import moment from 'moment';
+import Footer from '../components/Footer.js';
+import {withNavigation} from 'react-navigation';
+import {connect} from 'react-redux';
 
 
 const formItem = {
 
-  marginTop: 100,
+  marginTop: 50,
   width: '100%'
 
 }
 
+function mapStateToProps(state){
+  return {
+    endpoint: state.endpoint,
+    documents: state.documents
+  }
+}
+
+function mapDispatchToProps(dispatch){
+  return{
+    insert_document: (doc) => dispatch({type:'INSERT_DOCUMENT', document: doc })
+  }
+}
 
 
-
-class Home extends Component {
+class FormPage extends Component {
 
 
   constructor(props){
@@ -60,50 +72,41 @@ class Home extends Component {
       document_number:'',
       document_publisher: '',
       document_date: '',
+      moving_reason: {},
+      moving_reason_checkbox: false,
+      moving_reason_checkbox1: false,
+      moving_reason_checkbox2: false,
       checkSameHome: false,
       loading: false,
-      endpoint: 'http://192.168.0.7:5000/'
     }
   }
 
-  generate_pdf(){
 
+  createButton(){
+    const form_data = {
+      id:                           this.props.documents.length + 1,
+      first_name:                   this.state.first_name,
+      last_name:                    this.state.last_name,
+      birth_date:                   {day: '03', month: '05', year:'1998'},
+      birth_place:                  this.state.birth_place,
+      birth_province:               this.state.birth_province.toUpperCase(),
+      first_home_address:           this.state.first_home_address,
+      first_home_province:          this.state.first_home_province.toUpperCase(),
+      first_home_municipal:         this.state.first_home_municipal,
+      second_home_province:         this.state.second_home_province.toUpperCase(),
+      second_home_municipal:        this.state.second_home_municipal,
+      second_home_address:          this.state.second_home_address,
+      document_type:                this.state.document_type,
+      document_number:              this.state.document_number,
+      document_publisher:           this.state.document_publisher,
+      identity_document_date:       {day: this.state.document_date.getDay(), month: this.state.document_date.getMonth(), year: this.state.document_date.getYear()},
+      moving_reason:                this.state.moving_reason
 
-
-      const form_data = {
-        first_name:                   this.state.first_name,
-        last_name:                    this.state.last_name,
-        birth_date:                   {day: '03', month: '05', year:'1998'},
-        birth_place:                  this.state.birth_place,
-        birth_province:               this.state.birth_province.toUpperCase(),
-        first_home_address:           this.state.first_home_address,
-        first_home_province:          this.state.first_home_province.toUpperCase(),
-        first_home_municipal:         this.state.first_home_municipal,
-        second_home_province:         this.state.second_home_province.toUpperCase(),
-        second_home_municipal:        this.state.second_home_municipal,
-        second_home_address:          this.state.second_home_address,
-        document_type:                this.state.document_type,
-        document_number:              this.state.document_number,
-        document_publisher:           this.state.document_publisher,
-        identity_document_date:       {day: this.state.document_date.getDay(), month: this.state.document_date.getMonth(), year: this.state.document_date.getYear()}
-
-
-      }
-      const requestOptions = {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({form_data: form_data})
-      };
-
-      this.setState({loading: true})
-
-      fetch(this.state.endpoint + 'form_data', requestOptions)
-          .then(response => response.json())
-          .then(data => {
-            if(data.status == 200)
-              console.log('success')
-          });
+    }
+    this.props.insert_document(form_data)
+    this.props.navigation.navigate('GeneratePdfPage', {document_id: form_data.id})
   }
+
 
   handleCheckboxSameHome = (event) => {
     this.setState({checkSameHome: !this.state.checkSameHome})
@@ -115,11 +118,10 @@ class Home extends Component {
   }
 
 
-
-
     render(){
       return(
         <Container>
+          <Header style={{backgroundColor: '#2C3539'}}/>
           <Content contentContainerStyle={{ flex: 1, justifyContent: 'flex-start', marginTop: 100}} scrollEnabled={true}>
             <ScrollView>
               <Item style={formItem}>
@@ -232,18 +234,69 @@ class Home extends Component {
                 }
 
               </Item>
+              <Text style={{marginTop:50, fontSize: 20}}> Lo spostamento e' determinato da </Text>
+              <Item style={formItem}>
+                <TouchableOpacity style={{width: '100%'}} onPress={() =>
+                  this.setState({
+                    moving_reason: 0,
+                    moving_reason_checkbox:true,
+                    moving_reason_checkbox1:false,
+                    moving_reason_checkbox2: false})}>
+                <Left>
+                  <Text style={{fontSize:18, width: '100%'}}>Esigenze lavorative</Text>
+                </Left>
+                <Right>
+                  <Radio
+                    selected={this.state.moving_reason_checkbox} />
+                </Right>
+                </TouchableOpacity>
+                </Item>
+                <Item style={formItem}>
+                  <TouchableOpacity style={{width: '100%'}} onPress={() =>
+                    this.setState({
+                      moving_reason: 1,
+                      moving_reason_checkbox: false,
+                      moving_reason_checkbox1: true,
+                      moving_reason_checkbox2: false})} >
+                  <Left>
+                    <Text style={{fontSize:18, width: '100%'}}>Motivi di Salute</Text>
+                  </Left>
+                  <Right>
+                    <Radio
+                      selected={this.state.moving_reason_checkbox1} />
+                  </Right>
+                  </TouchableOpacity>
+                </Item>
+                <Item style={formItem}>
+                  <TouchableOpacity style={{width: '100%'}} onPress={() =>
+                    this.setState({
+                      moving_reason: 2,
+                      moving_reason_checkbox: false,
+                      moving_reason_checkbox1:false,
+                      moving_reason_checkbox2: true})} >
+                  <Left>
+                    <Text style={{fontSize:18, width: '100%'}}>Altro</Text>
+                  </Left>
+                  <Right>
+                    <Radio
+                      selected={this.state.moving_reason_checkbox2}
+ />
+                  </Right>
+                  </TouchableOpacity>
+                </Item>
 
             <Button
               style={{marginTop: 50, width: '100%', justifyContent:'center', backgroundColor: 'white',}}
-              onPress={this.generate_pdf.bind(this)}>
-              <Text style={{color:'black'}}> Genera </Text>
+              onPress={this.createButton.bind(this)}>
+              <Text style={{color:'black'}}> Salva </Text>
           </Button>
           </ScrollView>
         </Content>
+        <Footer />
       </Container>
       )
     }
   }
 
 
-export default Home
+export default withNavigation(connect(mapStateToProps, mapDispatchToProps)(FormPage))

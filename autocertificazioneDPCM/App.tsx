@@ -4,11 +4,48 @@ import { AppLoading } from 'expo';
 import * as Font from 'expo-font';
 import Home from './src/Home.js';
 import { Ionicons } from '@expo/vector-icons';
+import { createAppContainer } from 'react-navigation';
+import { createStackNavigator } from 'react-navigation-stack';
+import FormPage from './src/screens/FormPage.js';
+import HomePage from './src/screens/HomePage.js';
+import GeneratePdf from './src/screens/GeneratePdf';
+import {Provider} from 'react-redux';
+import {createStore, combineReducer} from 'redux';
+
+const init_store = {
+  documents: [],
+  endpoint: 'http://192.168.0.7:5000/'
+}
+
+const appReducer = (state = init_store, action) => {
+
+  switch (action.type) {
+    case 'INSERT_DOCUMENT':
+        return {
+          ...state,
+          documents: [...state.documents, action.document]
+        }
+  }
+
+  return state
+}
+
+const store = createStore(appReducer)
 
 
+const AppNavigator = createStackNavigator({
+  HomePage: {screen: HomePage, navigationOptions: { header: null }},
+  FormPage: {screen: FormPage, navigationOptions: { header: null }},
+  GeneratePdfPage: {screen: GeneratePdf, navigationOptions: { header: null }},
+
+
+})
+
+const AppContainer = createAppContainer(AppNavigator)
 
 
 export default class App extends Component {
+
 
   constructor(props){
     super(props);
@@ -30,7 +67,9 @@ export default class App extends Component {
   render(){
     if(this.state.isLoaded){
       return (
-        <Home />
+        <Provider store={store}>
+          <AppContainer />
+        </Provider>
       );
     }
     else return <AppLoading />

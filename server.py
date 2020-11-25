@@ -7,7 +7,7 @@ def form_data():
     
     if request.json:
         form_data = request.json['form_data']
-
+        print(form_data['moving_reason'])
         template = render_template('autocertificazione_model.html', form_data = form_data)            
         pdf = pdfkit.from_string(template, 'autocertificazione.pdf')
 
