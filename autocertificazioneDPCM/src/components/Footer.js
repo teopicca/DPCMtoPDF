@@ -13,7 +13,7 @@ class FooterComponent extends Component {
           <Text style={{color: 'white'}}>Home</Text>
 
         </Button>
-          <Button vertical onPress={() => this.props.navigation.navigate('FormPage')}>
+          <Button vertical onPress={() => this.props.navigation.navigate('FormPage', {id: null})}>
             <Icon type='Entypo' name="text-document" style={{color: 'white'}} />
             <Text style={{color: 'white'}}> crea </Text>
           </Button>

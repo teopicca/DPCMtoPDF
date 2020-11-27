@@ -23,15 +23,26 @@ import {
 
 } from 'native-base';
 import {ActivityIndicator} from 'react-native';
-import moment from 'moment'
-import Footer from '../components/Footer.js'
+import moment from 'moment';
 
-import {withNavigation} from 'react-navigation'
-//import {connect} from 'react-redux'
+import DocumentCard from '../components/DocumentCard.js';
+import Footer from '../components/Footer.js';
+
+import {withNavigation} from 'react-navigation';
+import {connect} from 'react-redux';
 
 const headerStyle = {
   backgroundColor: '#2C3539'
 }
+
+function mapStateToProps(state){
+  return {
+    endpoint: state.endpoint,
+    documents: state.documents
+  }
+}
+
+
 
 
 class HomePage extends Component {
@@ -39,24 +50,31 @@ class HomePage extends Component {
   constructor(props){
     super(props);
     this.state = {
+
     }
   }
 
 
     render(){
-      return(
-        <Container>
-          <Header style={headerStyle} />
-          <Content contentContainerStyle={{ flex: 1, justifyContent: 'flex-start', marginTop: 100}} scrollEnabled={true}>
-            <ScrollView>
+        return(
+          <Container>
+            <Header style={headerStyle} />
+            <Content contentContainerStyle={{ flex: 1, justifyContent: 'flex-start', marginTop: 50}} scrollEnabled={true}>
+              <ScrollView>
+              {this.props.documents.length !== 0 && this.props.documents.map(doc => (
+                <DocumentCard
+                  id={doc.data.id}
+                  title={doc.data.first_name + ' ' + doc.data.last_name}
+                />
+              ))}
 
-          </ScrollView>
-        </Content>
-        <Footer />
-      </Container>
-      )
-    }
+            </ScrollView>
+          </Content>
+          <Footer />
+        </Container>
+        )
+      }
   }
 
 
-export default withNavigation(HomePage)
+export default withNavigation(connect(mapStateToProps)(HomePage))

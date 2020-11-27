@@ -50,14 +50,14 @@ function mapDispatchToProps(dispatch){
 }
 
 
-class FormPage extends Component {
+class FormComponent extends Component {
 
 
   constructor(props){
     super(props);
     this.state = {
-      first_name: '',
-      last_name: '',
+      first_name: this.props.documents.first_name,
+      last_name: this.props.documents.last_name,
       date: new Date(),
       birth_date: '',
       showBirthDatePicker: false,
@@ -81,26 +81,6 @@ class FormPage extends Component {
     }
   }
 
-  componentDidMount(){
-
-    // mapping props to state
-
-    if(this.props.navigation.state.params.id !== null){
-      const id = this.props.navigation.state.params.id
-      this.props.documents.map(doc => {
-        if(doc.data.id == id){
-          for (let [key, value] of Object.entries(doc.data)) {
-              var form_state = {}
-              form_state[key] = value
-              console.log(form_state)
-              this.setState(form_state)
-              //this.state[key] = value
-          }
-
-        }
-      })
-    }
-  }
 
 
   createButton(){
@@ -108,7 +88,7 @@ class FormPage extends Component {
       id:                           this.props.documents.length + 1,
       first_name:                   this.state.first_name,
       last_name:                    this.state.last_name,
-      birth_date:                   {day: '03', month: '05', year:'1998'},
+      birth_date:                   {day:  this.state.document_date.getDay(), month: this.state.document_date.getMonth(), year: this.state.document_date.getYear()},
       birth_place:                  this.state.birth_place,
       birth_province:               this.state.birth_province.toUpperCase(),
       first_home_address:           this.state.first_home_address,
@@ -124,9 +104,6 @@ class FormPage extends Component {
       moving_reason:                this.state.moving_reason
 
     }
-
-    console.log(form_data)
-
     this.props.insert_document(form_data)
     this.props.navigation.navigate('GeneratePdfPage', {document_id: form_data.id})
   }
@@ -149,7 +126,7 @@ class FormPage extends Component {
           <Content contentContainerStyle={{ flex: 1, justifyContent: 'flex-start', marginTop: 100}} scrollEnabled={true}>
             <ScrollView>
               <Item style={formItem}>
-                <Input placeholder="nome" value={this.state.first_name} onChangeText={(event) => this.setState({first_name: event})}/>
+                <Input placeholder="nome" onChangeText={(event) => this.setState({first_name: event})}/>
               </Item>
               <Item style={formItem}>
                 <Input
@@ -176,31 +153,26 @@ class FormPage extends Component {
               </Item>
               <Item style={formItem}>
                 <Input
-                  value={this.state.birth_place}
                   placeholder="luogo di nascita"
                   onChangeText={(event) => this.setState({birth_place: event})}/>
               </Item>
               <Item style={formItem}>
                 <Input
-                  value={this.state.birth_province}
                   placeholder="provincia"
                   onChangeText={(event) => this.setState({birth_province: event})}/>
               </Item>
               <Item style={formItem}>
                 <Input
-                  value={this.state.first_home_municipal}
                   placeholder="residente in"
                   onChangeText={(event) => this.setState({first_home_municipal: event})}/>
               </Item>
               <Item style={formItem}>
                 <Input
-                  value={this.state.first_home_province}
                   placeholder="provincia"
                   onChangeText={(event) => this.setState({first_home_province: event})}/>
               </Item>
               <Item style={formItem}>
                   <Input
-                    value={this.state.first_home_address}
                     placeholder="via"
                     onChangeText={(event) => this.setState({first_home_address: event})}/>
               </Item>
@@ -328,4 +300,4 @@ class FormPage extends Component {
   }
 
 
-export default withNavigation(connect(mapStateToProps, mapDispatchToProps)(FormPage))
+export default withNavigation(connect(mapStateToProps, mapDispatchToProps)(FormComponent))

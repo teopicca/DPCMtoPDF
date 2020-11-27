@@ -6,6 +6,7 @@ app = Flask(__name__)
 def form_data():
     
     if request.json:
+        email = request.json['email']
         form_data = request.json['form_data']
         print(form_data['moving_reason'])
         template = render_template('autocertificazione_model.html', form_data = form_data)            

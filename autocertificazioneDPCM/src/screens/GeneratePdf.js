@@ -59,8 +59,8 @@ class GeneratePdf extends Component {
     console.log(id)
 
     for (var i = 0; i < documents.length; i++) {
-      if(documents[i].id == id){
-        this.state.document = documents[i]
+      if(documents[i].data.id == id){
+        this.state.document = documents[i].data
       }
     }
   }
@@ -113,24 +113,24 @@ class GeneratePdf extends Component {
                 <Text> inzia pdf </Text>
               </Button>
               </Item>
-
           </Content>
           <Footer />
         </Container>
         )
       }
       else{
-        <Container>
-          <Header style={headerStyle} />
-          <Content contentContainerStyle={{ flex: 1, justifyContent: 'flex-start', marginTop: 100}} scrollEnabled={true}>
-            <ScrollView>
+        return(
+          <Container>
+            <Header style={headerStyle} />
+            <Content contentContainerStyle={{ flex: 1, justifyContent: 'flex-start', marginTop: 100}} scrollEnabled={true}>
+              <ScrollView>
 
-          </ScrollView>
-        </Content>
-        <Footer />
-      </Container>
+            </ScrollView>
+          </Content>
+          <Footer />
+        </Container>
+        )
       }
-
     }
   }
 

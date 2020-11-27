@@ -21,9 +21,10 @@ const appReducer = (state = init_store, action) => {
 
   switch (action.type) {
     case 'INSERT_DOCUMENT':
+      console.log(action.docuemnt)
         return {
           ...state,
-          documents: [...state.documents, action.document]
+          documents: [...state.documents, {data: action.document}]
         }
   }
 
