@@ -25,6 +25,9 @@ import {
 import {ActivityIndicator} from 'react-native';
 import moment from 'moment';
 import Footer from '../components/Footer.js';
+import Signature from '../components/Signature.js';
+
+
 import {withNavigation} from 'react-navigation';
 import {connect} from 'react-redux';
 
@@ -76,8 +79,12 @@ class FormPage extends Component {
       moving_reason_checkbox: false,
       moving_reason_checkbox1: false,
       moving_reason_checkbox2: false,
+      moving_reason_departure: '',
+      moving_reason_arrival: '',
       checkSameHome: false,
       loading: false,
+      showSignature: false,
+      Signature: ''
     }
   }
 
@@ -100,6 +107,13 @@ class FormPage extends Component {
         }
       })
     }
+
+    if(this.state.first_home_address !== '' && this.state.first_home_province !== '')
+    this.setState({checkSameHome: (this.state.first_home_address == this.state.second_home_address
+                                   && this.state.first_home_province == this.state.second_home_province
+                                   && this.state.first_home_municipal == this.state.second_home_municipal)})
+
+
   }
 
 
@@ -121,7 +135,10 @@ class FormPage extends Component {
       document_number:              this.state.document_number,
       document_publisher:           this.state.document_publisher,
       identity_document_date:       {day: this.state.document_date.getDay(), month: this.state.document_date.getMonth(), year: this.state.document_date.getYear()},
-      moving_reason:                this.state.moving_reason
+      moving_reason:                this.state.moving_reason,
+      moving_reason_departure:      this.state.moving_reason_departure,
+      moving_reason_arrival:        this.state.moving_reason_arrival,
+      signature:                    this.state.signature
 
     }
 
@@ -142,11 +159,18 @@ class FormPage extends Component {
   }
 
 
+  setsignatureb64Image(b64Image){
+    console.log(b64Image)
+    this.setState({signature: b64Image})
+
+  }
+
+
     render(){
       return(
         <Container>
           <Header style={{backgroundColor: '#2C3539'}}/>
-          <Content contentContainerStyle={{ flex: 1, justifyContent: 'flex-start', marginTop: 100}} scrollEnabled={true}>
+          <Content contentContainerStyle={{ flex: 1, justifyContent: 'flex-start',}} scrollEnabled={true}>
             <ScrollView>
               <Item style={formItem}>
                 <Input placeholder="nome" value={this.state.first_name} onChangeText={(event) => this.setState({first_name: event})}/>
@@ -172,7 +196,6 @@ class FormPage extends Component {
                     onChange={(event, date) => date != null && this.setState({birth_date: date, showBirthDatePicker: false})}
                   />
                 }
-
               </Item>
               <Item style={formItem}>
                 <Input
@@ -309,9 +332,30 @@ class FormPage extends Component {
                   <Right>
                     <Radio
                       selected={this.state.moving_reason_checkbox2}
- />
+                  />
                   </Right>
                   </TouchableOpacity>
+                </Item>
+                <Item style={formItem}>
+                  <Input
+                    value={this.state.moving_reason_departure}
+                    placeholder="lo spostamento e' iniziato da "
+                    onChangeText={(event) => this.setState({moving_reason_departure: event})}/>
+                </Item>
+                <Item style={formItem}>
+                  <Input
+                    value={this.state.moving_reason_arrival}
+                    placeholder="con destinazione "
+                    onChangeText={(event) => this.setState({moving_reason_arrival: event})}/>
+                </Item>
+                <Item>
+                  <View style={{flex:1, justifyContent:'center'}}>
+                  <Button onPress={() => this.setState({showSignature: true})}>
+                    <Text> Firma </Text>
+                  </Button>
+
+                   {this.state.showSignature && <Signature setSignatureImage={this.setsignatureb64Image.bind(this)} />}
+                   </View>
                 </Item>
 
             <Button

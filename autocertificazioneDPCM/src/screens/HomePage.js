@@ -55,24 +55,44 @@ class HomePage extends Component {
   }
 
 
-    render(){
-        return(
-          <Container>
-            <Header style={headerStyle} />
-            <Content contentContainerStyle={{ flex: 1, justifyContent: 'flex-start', marginTop: 50}} scrollEnabled={true}>
-              <ScrollView>
-              {this.props.documents.length !== 0 && this.props.documents.map(doc => (
-                <DocumentCard
-                  id={doc.data.id}
-                  title={doc.data.first_name + ' ' + doc.data.last_name}
-                />
-              ))}
 
-            </ScrollView>
-          </Content>
-          <Footer />
-        </Container>
-        )
+    render(){
+        if(this.props.documents.length !== 0){
+          return(
+            <Container>
+              <Header style={headerStyle} />
+              <Content contentContainerStyle={{ flex: 1, justifyContent: 'flex-start', marginTop: 50}} scrollEnabled={true}>
+                <ScrollView>
+                {this.props.documents.map(doc => (
+                  <DocumentCard
+                    id={doc.data.id}
+                    title={doc.data.first_name + ' ' + doc.data.last_name}
+                  />
+                ))}
+
+              </ScrollView>
+            </Content>
+            <Footer />
+          </Container>
+          )
+        }
+        else{
+          return(
+            <Container>
+              <Header style={headerStyle} />
+              <Content contentContainerStyle={{ flex: 1, justifyContent: 'center', alignItems:'center', marginTop: 50}} scrollEnabled={true}>
+                <ScrollView>
+                  <Text style={{fontSize: 20, marginBottom: 20}}>  Non sono presenti autocertificazioni. </Text>
+                  <Button style={{width: 200, backgroundColor: '#2C3539', justifyContent:'center', alignSelf:'center'}} onPress={() => this.props.navigation.navigate('FormPage', {id: null})} >
+                    <Text> creane una </Text>
+                  </Button>
+              </ScrollView>
+            </Content>
+            <Footer />
+          </Container>
+          )
+        }
+
       }
   }
 

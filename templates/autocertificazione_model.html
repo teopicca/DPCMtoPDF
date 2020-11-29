@@ -1,9 +1,12 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
 <head>
-<title></title>
+  <script src="https://use.fontawesome.com/262bbe0a41.js"></script>
+  <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous"/>
 
+<title></title>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+
  <br/>
 <style type="text/css">
 	p 	.ft10{font-size:14px;font-family:Times;color:#000000;}
@@ -61,33 +64,36 @@
 
 <p  class="ft12">➢<b>&nbsp;che lo spostamento è determinato da:</b></p>
 <br>
-<p class="ft12"><b> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- comprovate esigenze lavorative;</b></p>
+<p class="ft12"> <b> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; - {%if form_data.moving_reason == 0 %} <i class="fas fa-circle"></i> {% endif %}
+ comprovate esigenze lavorative;</b></p>
 <br>
-<p class="ft12"><b> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- motivi di salute;</b></p>
+<p class="ft12"><b> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-{%if form_data.moving_reason == 1 %} <i class="fas fa-circle"></i> {% endif %}  motivi di salute;</b></p>
 <br>
-<p  class="ft12"><b> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- altri motivi ammessi dalle vigenti normative ovvero dai predetti decreti, ordinanze e altri</b></p>
+<p  class="ft12"><b> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- {%if form_data.moving_reason == 2 %} <i class="fas fa-circle"></i> {% endif %}altri motivi ammessi dalle vigenti normative ovvero dai predetti decreti, ordinanze e altri</b></p>
 <p  class="ft15"><b> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;provvedimenti che definiscono le misure di prevenzione della diffusione del contagio;<br/></b><i> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;(specificare il motivo che determina lo spostamento):</i></p>
 <br>
 <br>
-<p  class="ft12"><b>________________________________________________________________________________________________; </b></p>
+<p  class="ft12"><b>_________________________{{form_data.moving_reason_departure}}___________________________________________________________; </b></p>
 <p  class="ft12"><b>➢ che lo spostamento è iniziato da </b><i>(indicare l’indirizzo da cui è iniziato)</i></p>
 <br>
 <br>
 
-<p class="ft12"><b>________________________________________________________________________________________________; </b></p>
+<p class="ft12"><b>__________________________{{form_data.moving_reason_arrival}}________________________________________________________; </b></p>
 
 <p  class="ft12"><b>➢ con destinazione </b><i>(indicare l’indirizzo di destinazione)</i></p>
 <br>
 <br>
-<p  class="ft12"><b>________________________________________________________________________________________________;</b></p>
+<p  class="ft12"><b>__________________________{{form_data.moving_reason_statement}}____________________________________________________________________;</b></p>
 <p  class="ft12"><b>➢in merito allo spostamento, dichiara inoltre che:</b></p>
 <br>
 <br>
 <p  class="ft12"><b>________________________________________________________________________________________________.</b></p>
 <br>
 <br>
-<p  class="ft12"><b>Data, ora e luogo del controllo </b></p>
+<p  class="ft12"><b>Data, ora e luogo del controllo     {{form_data.date}} </b></p>
 <p class="ft10">Firma del dichiarante </p>
+<img style='width: 300px; height: 300px;margin-top: 20' src="data:image/jpg;base64,{{ form_data.signature | safe }}">
+
 <p  class="ft10">L’Operatore di Polizia </p>
 </div>
 </div>
